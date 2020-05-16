@@ -10,3 +10,6 @@ def gogame():
     return"Hey put a game here sometime!...maybe? Please? Pretty please with a muffin on top?"
     #STOP TYPING NONSENSE AND GET TO WORK!!! /:[
     
+@app.route('/proof')
+def dudeproof():
+	return"dude look it's proof!!"

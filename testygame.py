@@ -1,8 +1,15 @@
 import pygame as py
 import time
 import random
+import pylint
 py.init()
 
+pely = 20
+pel_motion = False
+
+starttime = time.time()
+
+enemy_num = 7
 
 score = 0
 lives = 3
@@ -18,11 +25,13 @@ py.display.set_caption('This is the window title just so ya know')
 #this clock here is like the fps for everything basically, keep that in mind for later
 clock = py.time.Clock()
 
-killed_enemy = pass
+killed_enemy = None
 ship_width = 110
 
 game_exit = False
 ship_img = py.image.load('ship.png')
+secondship_img = py.image.load('ship2.png')
+thirdship_image = py.image.load('ship3.png')
 life_img = py.image.load('smaller_ship.png')
 tip = py.image.load('tip.png')
 blank = py.image.load('blank.png')
@@ -33,16 +42,49 @@ enemy4 = py.image.load('enemy.png')
 enemy5 = py.image.load('enemy.png')
 enemy6 = py.image.load('enemy.png')
 enemy7 = py.image.load('enemy.png')
-enemy8 = py.image.load('enemy.png')
-enemy9 = py.image.load('enemy.png')
-enemy10 = py.image.load('enemy.png')
 explosion = py.image.load('explode.png')
+shot = py.image.load('player_pew.png')
+
+
+onelive = True
+twolive = True
+threelive = True
+fourlive = True
+fivelive = True
+sixlive = True
+sevenlive = True
+
+
 
 def enemy_spawn():
-    gameDisplay.blit(enemy, (random.randint(-10, 700), -10))
-    py.display.update()
-    time.sleep(2)
-    gameDisplay.blit(enemy2, (random.randint(-10, 700), -10))
+    global starttime
+    global enemy_num
+    global onelive
+    global twolive
+    global threelive
+    global fourlive
+    global fivelive
+    global sixlive
+    global sevenlive
+    counter = (time.time() - starttime)
+    if onelive == True:
+        gameDisplay.blit(enemy, (-10, -10))
+    if twolive == True:
+        gameDisplay.blit(enemy2, (100, -10))
+    if threelive == True:
+        gameDisplay.blit(enemy3, (210, -10))
+    if fourlive == True:
+        gameDisplay.blit(enemy4, (320, -10))
+    if fivelive == True:
+        gameDisplay.blit(enemy5, (430, -10))
+    if sixlive == True:
+        gameDisplay.blit(enemy6, (540, -10))
+    if sevenlive == True:
+        gameDisplay.blit(enemy7, (650, -10))
+    print(counter)
+    # # if time.time() == counter:
+    # #     gameDisplay.blit(enemy, (random.randint(-10, 700), -10))
+    # #     gameDisplay.blit(enemy2, (random.randint(-10, 700), -10))
 def enemy_kill():
     pass
 def ship(x,y):
@@ -73,6 +115,15 @@ def life_counter():
     if lives == 1:
         gameDisplay.blit(blank, (40, 550))
 
+def pel(x,y):
+    global pel_motion
+    global pely
+    if pel_motion == False:
+        pelx = x+34
+        pely = 20
+    elif pel_motion == True:
+        pely -= 30
+    gameDisplay.blit(shot, (pelx, y-pely))
 
 def game_over():
     pass
@@ -82,7 +133,6 @@ def game_loop():
     global game_exit
     x = (display_width*0.45)
     y = (display_height*0.65)
-
     x_change = 0
     while not game_exit:
         for event in py.event.get():
@@ -91,29 +141,34 @@ def game_loop():
                 quit()
             if event.type == py.KEYDOWN:
                 if event.key == py.K_LEFT:
-                    x_change = -8
+                    x_change = -15
                     
                 elif event.key == py.K_RIGHT:
-                    x_change = 8
+                    x_change = 15
+                if event.key == py.K_SPACE:
+                    pel_motion = True
                 if event.key == py.K_q:
                     py.quit()
                     quit()
                 
             if event.type == py.KEYUP:
                 if event.key == py.K_LEFT or event.key == py.K_RIGHT:
-                    x_change = 0     
+                    x_change = 0
+                if event.key == py.K_SPACE:
+                    pel_motion = True    
         x += x_change
 
 
         gameDisplay.fill(black)
+        pel(x,y)
         ship(x,y)
         scoreboard()
         life_counter()
+        enemy_spawn()
 
 
         if x > display_width - ship_width or x < -30:
             x_change = 0
-            enemy_spawn()
         if lives == 0:
             game_over()
             
